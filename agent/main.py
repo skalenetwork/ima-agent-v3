@@ -1,30 +1,46 @@
+#   -*- coding: utf-8 -*-
+#
+#   This file is part of ima-agent
+#
+#   Copyright (C) 2025 SKALE Labs
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import logging
+from multiprocessing import SimpleQueue
 
-from skale import SkaleIma
-from skale.schain_ima import SchainIma
-
-from agent.configs import config
+from agent.executor import JobExecutor
 from agent.logger import init_logger
+from agent.producers import m2s_loop, s2m_loop, s2s_loop
+from agent.thread_group import ThreadGroup
 
 logger = logging.getLogger(__name__)
 
 
-def init_ima_mainnet() -> SkaleIma:
-    return SkaleIma(config.mainnet_endpoint, config.ima_contracts)
-
-
-def init_ima_schain() -> SchainIma:
-    return SchainIma(config.schain_endpoint, config.ima_contracts_schain)
-
-
-def run_agent_loop() -> None:
-    init_logger()
-    logger.info('Starting agent loop')
-    ima_mainnet = init_ima_mainnet()
-    ima_schain = init_ima_schain()
-    logger.info(ima_mainnet.community_pool.address)
-    logger.info(ima_schain.community_locker.address)
+def run_agent() -> None:
+    executor = JobExecutor(workers=6)
+    errq: SimpleQueue[BaseException] = SimpleQueue()
+    tg = ThreadGroup()
+    try:
+        tg.go(m2s_loop, executor, errq)
+        tg.go(s2m_loop, executor, errq)
+        tg.go(s2s_loop, executor, errq)
+        tg.join()
+    finally:
+        executor.shutdown()
 
 
 if __name__ == '__main__':
-    run_agent_loop()
+    init_logger()
+    run_agent()

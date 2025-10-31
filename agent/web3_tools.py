@@ -17,6 +17,23 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 
-class MissingEnvVariableError(Exception):
-    pass
+from skale import SchainIma, SkaleIma, SkaleManager
+from skale.wallets.common import BaseWallet
+
+from agent.configs import Config
+
+logger = logging.getLogger(__name__)
+
+
+def get_ima_mainnet(config: Config, wallet: BaseWallet | None = None) -> SkaleIma:
+    return SkaleIma(config.mainnet_endpoint, config.ima_contracts, wallet)
+
+
+def get_ima_schain(config: Config, wallet: BaseWallet | None = None) -> SchainIma:
+    return SchainIma(config.schain_endpoint, config.ima_contracts_schain, wallet)
+
+
+def get_skale_manager(config: Config, wallet: BaseWallet | None = None) -> SkaleManager:
+    return SkaleManager(config.mainnet_endpoint, config.manager_contracts, wallet)

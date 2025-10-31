@@ -17,6 +17,18 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 
-class MissingEnvVariableError(Exception):
-    pass
+from skale import SkaleManager
+from skale.types.schain import Schain, SchainHash
+
+logger = logging.getLogger(__name__)
+
+
+def collect_connected_chains(skale: SkaleManager) -> list[Schain]:
+    all_schains_ids = skale.schains_internal.get_all_schains_ids()
+    return get_schains(skale, all_schains_ids)
+
+
+def get_schains(skale: SkaleManager, schain_ids: list[SchainHash]) -> list[Schain]:
+    return [skale.schains.get(schain_hash) for schain_hash in schain_ids]

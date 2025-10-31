@@ -17,6 +17,19 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 
-class MissingEnvVariableError(Exception):
+from skale import SchainIma, SkaleIma, SkaleManager
+
+from agent.network_browser import collect_connected_chains
+
+logger = logging.getLogger(__name__)
+
+
+def run_s2s_pipeline(skale: SkaleManager, ima_schain: SchainIma) -> None:
+    schains = collect_connected_chains(skale)
+    logger.debug(schains)
+
+
+def run_m2s_pipeline(ima_mainnet: SkaleIma, ima_schain: SchainIma) -> None:
     pass

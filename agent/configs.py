@@ -1,4 +1,24 @@
+#   -*- coding: utf-8 -*-
+#
+#   This file is part of ima-agent
+#
+#   Copyright (C) 2025 SKALE Labs
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from skale.types.schain import SchainName
 
 
 class SgxConfig(BaseSettings):
@@ -21,9 +41,12 @@ class Config(BaseSettings):
     schain_endpoint: str
     ima_contracts: str
     manager_contracts: str
-    schain_name: str
+    schain_name: SchainName
 
     ima_contracts_schain: str = 'predeployed'
+
+    agent_loop_sleep: int = 5
+    agent_loop_error_sleep: int = 2
 
     model_config = SettingsConfigDict(
         env_file='.env',
@@ -33,5 +56,9 @@ class Config(BaseSettings):
     )
 
 
-config = Config()  # type: ignore[call-arg]
-sgx_config = SgxConfig()  # type: ignore[call-arg]
+def get_config() -> Config:
+    return Config()  # type: ignore[call-arg]
+
+
+def get_sgx_config() -> SgxConfig:
+    return SgxConfig()  # type: ignore[call-arg]

@@ -17,6 +17,28 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 
-class MissingEnvVariableError(Exception):
-    pass
+from eth_typing import ChecksumAddress, HexStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+TEST_TOKENS_DIR = 'test-tokens'
+TEST_TOKENS_PATH = os.path.join(os.path.dirname(__file__), '..', TEST_TOKENS_DIR)
+
+
+class DevConfig(BaseSettings):
+    eth_private_key: HexStr
+
+    erc20_mainnet_address: ChecksumAddress | None = None
+    erc20_schain_address: ChecksumAddress | None = None
+
+    model_config = SettingsConfigDict(
+        env_file='.env',
+        env_file_encoding='utf-8',
+        case_sensitive=False,
+        extra='ignore',
+    )
+
+
+def get_dev_config() -> DevConfig:
+    return DevConfig()  # type: ignore[call-arg]

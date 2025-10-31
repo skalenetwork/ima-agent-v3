@@ -1,3 +1,22 @@
+#   -*- coding: utf-8 -*-
+#
+#   This file is part of ima-agent
+#
+#   Copyright (C) 2025 SKALE Labs
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import logging
 import re
 import sys
@@ -5,7 +24,7 @@ from logging import StreamHandler
 from logging.handlers import RotatingFileHandler
 from urllib.parse import urlparse
 
-from agent.configs import config
+from agent.configs import get_config
 
 LOCAL_IPS = ['127.0.0.1', 'localhost']
 LOG_FILE_SIZE_MB = 100
@@ -16,6 +35,7 @@ LOG_FORMAT = '[%(asctime)s %(levelname)s][%(threadName)s] - %(name)s:%(lineno)d 
 
 
 def compose_hiding_patterns() -> dict:
+    config = get_config()
     # sgx_ip = urlparse(SGX_SERVER_URL).hostname
     eth_ip = urlparse(config.mainnet_endpoint).hostname
     patterns = {r'NEK\:\w+': '[SGX_KEY]'}
