@@ -6,9 +6,10 @@ from skale.wallets import Web3Wallet
 
 from agent.configs import get_config
 from agent.logger import init_logger
-from agent.web3_tools import get_ima_mainnet, get_ima_schain
+from agent.web3_tools import get_ima_mn, get_ima_sc
 from tools.dev_configs import get_dev_config
 from tools.hardhat_tokens import TokenType, deploy_erc20_m2s_token_pair
+from tools.token_helper import link_erc20_token
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +24,12 @@ if __name__ == '__main__':
     web3_schain = init_web3(config.schain_endpoint)
     wallet_schain = Web3Wallet(dev_config.eth_private_key, web3_schain)
 
-    ima_schain = get_ima_schain(config, wallet_schain)
-    ima_mainnet = get_ima_mainnet(config, wallet_mainnet)
+    ima_sc = get_ima_sc(config, wallet_schain)
+    ima_mn = get_ima_mn(config, wallet_mainnet)
 
     if not dev_config.erc20_mainnet_address or not dev_config.erc20_schain_address:
         mainnet_address, schain_address = deploy_erc20_m2s_token_pair(
-            config, dev_config, ima_mainnet, ima_schain, TokenType.ERC20
+            config, dev_config, ima_mn, ima_sc, TokenType.ERC20
         )
     else:
         mainnet_address = dev_config.erc20_mainnet_address
@@ -42,3 +43,11 @@ if __name__ == '__main__':
 
     logger.info(f'ERC20 Mainnet Token Balance: {balance_mainnet}')
     logger.info(f'ERC20 Schain Token Balance: {balance_schain}')
+
+    link_erc20_token(
+        ima_mn=ima_mn,
+        ima_sc=ima_sc,
+        schain_name=config.schain_name,
+        mainnet_token_address=mainnet_address,
+        schain_token_address=schain_address,
+    )

@@ -27,7 +27,7 @@ from threading import Event
 from agent.configs import get_config
 from agent.executor import JobExecutor
 from agent.pipeline import run_m2s_pipeline, run_s2s_pipeline
-from agent.web3_tools import get_ima_mainnet, get_ima_schain, get_skale_manager
+from agent.web3_tools import get_ima_mn, get_ima_sc, get_skale_manager
 
 logger = logging.getLogger(__name__)
 
@@ -35,12 +35,12 @@ logger = logging.getLogger(__name__)
 def m2s_loop(exe: JobExecutor, errq: SimpleQueue[BaseException], *, cancel: Event) -> None:
     logger.info('Starting m2s producer')
     config = get_config()
-    ima_mainnet = get_ima_mainnet(config)
-    ima_schain = get_ima_schain(config)
+    ima_mn = get_ima_mn(config)
+    ima_sc = get_ima_sc(config)
 
     while not cancel.is_set():
         logger.info('gathering all jobs for m2s')
-        run_m2s_pipeline(ima_mainnet, ima_schain)
+        run_m2s_pipeline(ima_mn, ima_sc)
         if not errq.empty():
             raise errq.get()
         time.sleep(config.agent_loop_sleep)
@@ -60,11 +60,11 @@ def s2s_loop(exe: JobExecutor, errq: SimpleQueue[BaseException], *, cancel: Even
     logger.info('Starting s2s producer')
     config = get_config()
     skale = get_skale_manager(config)
-    ima_schain = get_ima_schain(config)
+    ima_sc = get_ima_sc(config)
 
     while not cancel.is_set():
         logger.info('gathering all jobs for s2s')
-        run_s2s_pipeline(skale, ima_schain)
+        run_s2s_pipeline(skale, ima_sc)
         if not errq.empty():
             raise errq.get()
         time.sleep(config.agent_loop_sleep)

@@ -19,7 +19,7 @@
 
 import logging
 
-from skale import SchainIma, SkaleIma, SkaleManager
+from skale import MainnetIma, SchainIma, SkaleManager
 from skale.wallets.common import BaseWallet
 
 from agent.configs import Config
@@ -27,11 +27,11 @@ from agent.configs import Config
 logger = logging.getLogger(__name__)
 
 
-def get_ima_mainnet(config: Config, wallet: BaseWallet | None = None) -> SkaleIma:
-    return SkaleIma(config.mainnet_endpoint, config.ima_contracts, wallet)
+def get_ima_mn(config: Config, wallet: BaseWallet | None = None) -> MainnetIma:
+    return MainnetIma(config.mainnet_endpoint, config.ima_contracts, wallet)
 
 
-def get_ima_schain(config: Config, wallet: BaseWallet | None = None) -> SchainIma:
+def get_ima_sc(config: Config, wallet: BaseWallet | None = None) -> SchainIma:
     return SchainIma(config.schain_endpoint, config.ima_contracts_schain, wallet)
 
 

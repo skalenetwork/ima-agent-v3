@@ -19,17 +19,17 @@
 
 import logging
 
-from skale import SchainIma, SkaleIma, SkaleManager
+from skale import MainnetIma, SchainIma, SkaleManager
 
 from agent.network_browser import collect_connected_chains
 
 logger = logging.getLogger(__name__)
 
 
-def run_s2s_pipeline(skale: SkaleManager, ima_schain: SchainIma) -> None:
+def run_s2s_pipeline(skale: SkaleManager, ima_sc: SchainIma) -> None:
     schains = collect_connected_chains(skale)
     logger.debug(schains)
 
 
-def run_m2s_pipeline(ima_mainnet: SkaleIma, ima_schain: SchainIma) -> None:
+def run_m2s_pipeline(ima_mn: MainnetIma, ima_sc: SchainIma) -> None:
     pass

@@ -4,7 +4,7 @@ import subprocess
 from enum import Enum
 
 from eth_typing import ChecksumAddress, HexStr
-from skale import SchainIma, SkaleIma
+from skale import MainnetIma, SchainIma
 from web3 import Web3
 
 from agent.configs import Config
@@ -86,7 +86,7 @@ def add_minter(
     eth_private_key: HexStr,
     token_type: TokenType,
     token_address: HexStr,
-    ima_schain: SchainIma,
+    ima_sc: SchainIma,
     network_type: NetworkType,
 ) -> subprocess.CompletedProcess:
     return run_hardhat_cmd(
@@ -95,7 +95,7 @@ def add_minter(
             '--token-address',
             token_address,
             '--address',
-            ima_schain.token_manager_erc20.address,
+            ima_sc.erc20.address,
             '--network',
             network_type.value,
         ],
@@ -133,8 +133,8 @@ def mint_tokens(
 def deploy_erc20_m2s_token_pair(
     config: Config,
     dev_config: DevConfig,
-    ima_mainnet: SkaleIma,
-    ima_schain: SchainIma,
+    ima_mn: MainnetIma,
+    ima_sc: SchainIma,
     token_type: TokenType,
 ) -> tuple[ChecksumAddress, ChecksumAddress]:
     address_mainnet = deploy_token(
@@ -158,7 +158,7 @@ def deploy_erc20_m2s_token_pair(
         eth_private_key=dev_config.eth_private_key,
         token_type=token_type,
         token_address=address_schain,
-        ima_schain=ima_schain,
+        ima_sc=ima_sc,
         network_type=NetworkType.SCHAIN,
     )
     mint_tokens(
@@ -166,9 +166,9 @@ def deploy_erc20_m2s_token_pair(
         eth_private_key=dev_config.eth_private_key,
         token_type=token_type,
         token_address=address_mainnet,
-        receiver_address=ima_mainnet.wallet.address,
+        receiver_address=ima_mn.wallet.address,
         amount=TEST_MINT_AMOUNT,
         network_type=NetworkType.MAINNET,
     )
-    ima_mainnet.deposit_box_erc20.add_erc20_token(config.schain_name, address_mainnet)
+    ima_mn.erc20.add_erc20_token(config.schain_name, address_mainnet)
     return address_mainnet, address_schain

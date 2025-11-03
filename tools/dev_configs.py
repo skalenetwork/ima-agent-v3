@@ -21,9 +21,12 @@ import os
 
 from eth_typing import ChecksumAddress, HexStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from skale.types.schain import SchainName
 
 TEST_TOKENS_DIR = 'test-tokens'
 TEST_TOKENS_PATH = os.path.join(os.path.dirname(__file__), '..', TEST_TOKENS_DIR)
+
+MAINNET_CHAIN_NAME = SchainName('Mainnet')
 
 
 class DevConfig(BaseSettings):

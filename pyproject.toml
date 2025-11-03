@@ -2,11 +2,7 @@
 name = "ima-agent-v3"
 version = "3.0.0"
 requires-python = ">=3.13"
-# dependencies = ["skale.py==7.7dev2", "pydantic-settings==2.11.0"]
-dependencies = [
-    "skale.py @ file:///Users/dmytro/skalenetwork/skale.py",
-    "pydantic-settings==2.11.0",
-]
+dependencies = ["skale.py==7.8dev0", "pydantic-settings==2.11.0"]
 
 [project.optional-dependencies]
 dev = ["ruff==0.14.2", "pytest==8.4.2", "mypy==1.7.1"]
