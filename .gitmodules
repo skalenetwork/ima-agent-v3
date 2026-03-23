@@ -1,3 +1,6 @@
 [submodule "test-tokens"]
 	path = test-tokens
 	url = https://github.com/skalenetwork/test-tokens.git
+[submodule "helper-scripts"]
+	path = helper-scripts
+	url = https://github.com/skalenetwork/helper-scripts.git
