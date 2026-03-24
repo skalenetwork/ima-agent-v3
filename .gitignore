@@ -109,3 +109,8 @@ venv.bak/
 .idea
 
 uv.lock
+
+
+scripts/node_data/sgx_certs/
+scripts/node_data/skaled/skaled.status
+scripts/data_dir/

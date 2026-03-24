@@ -2,15 +2,16 @@
 
 set -e
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # Variables
-CERT_BASE_DIR="/skale_node_data/sgx_certs/"
+CERT_BASE_DIR="${SCRIPT_DIR}/node_data/sgx_certs/"
 CERT_FILE_NAME="sgx"
 KEY_FILE="${CERT_BASE_DIR}${CERT_FILE_NAME}.key"
 CSR_FILE="${CERT_BASE_DIR}${CERT_FILE_NAME}.csr"
 CERT_FILE="${CERT_BASE_DIR}${CERT_FILE_NAME}.crt"
 
-sudo mkdir -p $CERT_BASE_DIR
-sudo chown $(whoami):$(whoami) $CERT_BASE_DIR
+mkdir -p $CERT_BASE_DIR
 
 CERT_NAME=$(openssl rand -hex 16)
 

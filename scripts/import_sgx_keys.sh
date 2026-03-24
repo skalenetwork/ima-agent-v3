@@ -2,8 +2,10 @@
 
 set -e
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # Variables
-CERT_BASE_DIR="/skale_node_data/sgx_certs/"
+CERT_BASE_DIR="${SCRIPT_DIR}/node_data/sgx_certs/"
 CERT_NAME="sgx"
 KEY_FILE="${CERT_BASE_DIR}${CERT_NAME}.key"
 CERT_FILE="${CERT_BASE_DIR}${CERT_NAME}.crt"
